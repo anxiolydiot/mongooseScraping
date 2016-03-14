@@ -5,6 +5,10 @@ var Schema = mongoose.Schema;
 var NoteSchema = new Schema({
   note: {
     type:String
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
 
