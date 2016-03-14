@@ -29,6 +29,7 @@ db.once('open', function() {
 });
 
 var Article = require('./models/articleModel');
+var Note = require('./models/noteModel');
 
 app.get('/', function(req,res){
   request('https://news.ycombinator.com', function (error, response, html) {
@@ -62,12 +63,35 @@ app.get('/', function(req,res){
         });
 
       });
-      res.send(result);
+      res.render(index);
     }
     
   });
 
 });
+
+
+app.post('/submit', function(req,res){
+    var newNote =  new Note(req.body);
+    newNote.save(function(err,dbNote) {
+      if (err) {
+        res.send(err);
+      } else {
+      Article.findOneAndUpdate({
+        "_id" : req.body.articleid},
+        {$push: {'notes': dbNote._id}}, {new: true}, function(err, articleNotes){
+        if (err) {
+        res.send(err);
+      } else {
+      res.send(articleNotes);  
+      }
+
+      });
+    }
+  });
+});
+  
+
 
 
 
