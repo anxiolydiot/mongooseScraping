@@ -28,6 +28,7 @@ var Note = require('../models/noteModel');
           var points = $(subtext).eq(0).text();
           var username = $(subtext).eq(1).text();
           var comments = $(subtext).eq(2).text();
+          console.log(comments);
           var parsedScrape = new Article({
             rank: parseInt(rank),
             title: title,
@@ -35,7 +36,9 @@ var Note = require('../models/noteModel');
             points: parseInt(points),
             username: username,
             comments: parseInt(comments)
+
           });
+
           parsedScrape.save(function(err,dbArticle) {
             if (err) {
               console.log(err);
@@ -76,13 +79,13 @@ var Note = require('../models/noteModel');
           if (err) {
           res.send(err);
         } else {
-        res.send(articleNotes);  
+        return res.send(articleNotes);  
         }
         Note.findOneAndUpdate({"_id": dbNote._id}, {$set: {'_articleId' : req.body.articleId}}, function(err,ArticleNotes) {
         if (err) {
           res.send(err);
         } else 
-        res.send(articleNotes);
+        return res.send(articleNotes);
         });
         });
       }
